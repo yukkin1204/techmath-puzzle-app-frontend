@@ -5,7 +5,7 @@ const problemDetails: Record<string, { text: string }> = {
     '1': { text: '3兄弟を年上から順に並べてください。\n回答方法：氏名>氏名>氏名' }
 }
 
-const WORKERS_API_URL = 'https://techmath-puzzle-app-backend.yukkin1204-mathematics.workers.dev/answer'
+const WORKERS_API_URL = 'https://techmath-puzzle-app-backend.yukkin1204-mathematics.workers.dev/check-answer'
 
 export default function Question() {
     const router = useRouter()
@@ -25,10 +25,14 @@ export default function Question() {
             body: JSON.stringify({ penName, problemId: id, answer }),
         })
         const data = await res.json()
-        if (data.correct) {
-            setMessage('正解です！おめでとうございます！')
+        if (data.success) {
+            if (data.correct) {
+                setMessage('正解です！おめでとうございます！')
+            } else {
+                setMessage('残念、不正解です。もう一度試してください。')
+            }
         } else {
-            setMessage('残念、不正解です。もう一度試してください。')
+            setMessage(data.message || 'エラーが発生しました。')
         }
     }
 
